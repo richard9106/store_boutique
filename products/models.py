@@ -4,6 +4,11 @@ from django.db import models
 # Create your models here.
 class Category(models.Model):
     """Info of the diferent categories for our products"""
+
+    class Meta:
+        """select a name to display in admin"""
+        verbose_name_plural = 'categories'
+
     name = models.CharField(max_length=254)
     friendly_name = models.CharField(max_length=254)
 
