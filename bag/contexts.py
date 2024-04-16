@@ -31,12 +31,11 @@ def bag_contents(request):
                     'quantity': quantity,
                     'product': product,
                     'size': size,
-                })
-            
+                })        
 
-    if total < settings.FREE_DELIERY_THRESHOLD:
-        delivery = total * Decimal(settings.STANDARD_DELIERY_PERCENTAGE / 100)
-        free_delivery_delta = settings.FREE_DELIERY_THRESHOLD - total
+    if total < settings.FREE_DELIVERY_THRESHOLD:
+        delivery = total * Decimal(settings.STANDARD_DELVERY_PERCENTAGE / 100)
+        free_delivery_delta = settings.FREE_DELIVERY_THRESHOLD - total
     else:
         delivery = 0
         free_delivery_delta = 0
@@ -46,10 +45,10 @@ def bag_contents(request):
     context = {
         'bag_items': bag_items,
         'total': total,
-        'produc t_count': product_count,
-        'deliver y': delivery,
-        'free_del    ivery_delta': free_delivery_delta,
-        'free_delivery_threshold': settings.FREE_DELIERY_THRESHOLD,
+        'product_count': product_count,
+        'delivery': delivery,
+        'free_delivery_delta': free_delivery_delta,
+        'free_delivery_threshold': settings.FREE_DELIVERY_THRESHOLD,
         'grand_total': grand_total,
     }
 
