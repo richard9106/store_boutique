@@ -6,24 +6,72 @@
     https://stripe.com/docs/stripe-js
 */
 
-var stripe_public_key = $('#id_stripe_public_key').text().slice(1, -1);
-var client_secret = $('#id_client_secret').text().slice(1, -1);
-var stripe = Stripe(stripe_public_key, {locale: 'en'});
+var stripePublicKey = $("#id_stripe_public_key").text().slice(1, -1);
+var clientSecret = $("#id_client_secret").text().slice(1, -1);
+var stripe = Stripe(stripePublicKey, { locale: "en" });
 var elements = stripe.elements();
 var style = {
-    base: {
-        color: '#000',
-        fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
-        fontSmoothing: 'antialiased',
-        fontSize: '16px',
-        '::placeholder': {
-            color: '#aab7c4'
-        }
+  base: {
+    color: "#000",
+    fontFamily: '"Helvetica Neue", Helvetica, sans-serif',
+    fontSmoothing: "antialiased",
+    fontSize: "16px",
+    "::placeholder": {
+      color: "#aab7c4",
     },
-    invalid: {
-        color: '#dc3545',
-        iconColor: '#dc3545'
-    }
+  },
+  invalid: {
+    color: "#dc3545",
+    iconColor: "#dc3545",
+  },
 };
-var card = elements.create('card', {style: style});
-card.mount('#card-element');
+var card = elements.create("card", { style: style });
+card.mount("#card-element");
+
+// Handle realtime validation errors on the card elements
+card.addEventListener("change", function (e) {
+  var errorDiv = document.getElementById("card-error");
+  if (e.error) {
+    var html = `
+            <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+            </span>
+            <span>${e.error.message}</span>
+        `;
+    $(errorDiv).html(html);
+  } else {
+    errorDiv.textContent = "";
+  }
+});
+
+//Handle from submit
+
+var form = document.getElementById("payment-form");
+
+form.addEventListener("submit", function (ev) {
+  ev.preventDefault();
+  card.update({ disabled: true });
+  $("#submit-button").attr("disabled", true);
+  stripe.confirmCardPayment(clientSecret, {
+      payment_method: {
+        card: card,
+      },
+    })
+    .then(function (result) {
+      if (result.error) {
+        var errorDiv = document.getElementById("card-errors");
+        var html = `
+                <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+                </span>
+                <span>${result.error.message}</span>`;
+        $(errorDiv).html(html);
+        card.update({ disabled: false });
+        $("#submit-button").attr("disabled", false);
+      } else {
+        if (result.paymentIntent.status === "succeeded") {
+          form.submit();
+        }
+      }
+    });
+});
