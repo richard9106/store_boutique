@@ -1,12 +1,12 @@
 from django.contrib import admin
-from .models import Order, OrderLinItem
+from .models import Order, OrderLineItem
 # Register your models here.
 
 
 class OrderLineItemAdmin(admin.TabularInline):
     """display a list of the editable line items in the same
     page so we don't have to go to inlineitem seccion admin"""
-    model = OrderLinItem
+    model = OrderLineItem
     readonly_fields = ('lineitem_total',)
 
 

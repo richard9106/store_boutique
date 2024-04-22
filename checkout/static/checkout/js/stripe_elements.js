@@ -8,7 +8,7 @@
 
 var stripePublicKey = $("#id_stripe_public_key").text().slice(1, -1);
 var clientSecret = $("#id_client_secret").text().slice(1, -1);
-var stripe = Stripe(stripePublicKey, { locale: "en" });
+var stripe = Stripe(stripePublicKey, { locale: "en"});
 var elements = stripe.elements();
 var style = {
   base: {
@@ -25,7 +25,7 @@ var style = {
     iconColor: "#dc3545",
   },
 };
-var card = elements.create("card", { style: style });
+var card = elements.create("card", {style});
 card.mount("#card-element");
 
 // Handle realtime validation errors on the card elements
@@ -44,6 +44,7 @@ card.addEventListener("change", function (e) {
   }
 });
 
+
 //Handle from submit
 
 var form = document.getElementById("payment-form");
@@ -53,10 +54,11 @@ form.addEventListener("submit", function (ev) {
   card.update({ disabled: true });
   $("#submit-button").attr("disabled", true);
   stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: card,
-      },
-    }).then(function (result) {
+    payment_method:{
+      type: 'card',
+      card:  card,
+    },
+  }).then(function (result) {
       if (result.error) {
         var errorDiv = document.getElementById("card-errors");
         var html = `

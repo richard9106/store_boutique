@@ -5,7 +5,7 @@ import stripe
 from products.models import Product
 from bag.contexts import bag_contents
 from .forms import OrderForm
-from .models import Order, OrderLinItem
+from .models import Order, OrderLineItem
 
 
 def checkout(request):
@@ -29,12 +29,13 @@ def checkout(request):
         }
         order_form = OrderForm(form_data)
         if order_form.is_valid():
+            print('form is valid')
             order = order_form.save()
             for item_id, item_data in bag.items():
                 try:
                     product = Product.objects.get(id=item_id)
                     if isinstance(item_data, int):
-                        order_line_item = OrderLinItem(
+                        order_line_item = OrderLineItem(
                             order=order,
                             product=product,
                             quantity=item_data,
@@ -42,7 +43,7 @@ def checkout(request):
                         order_line_item.save()
                     else:
                         for size, quantity in item_data['items_by_size'].items():
-                            order_line_item = OrderLinItem(
+                            order_line_item = OrderLineItem(
                                 order=order,
                                 product=product,
                                 quantity=quantity,
