@@ -70,9 +70,8 @@ form.addEventListener("submit", function (ev) {
 
     stripe.confirmCardPayment(clientSecret, {
       payment_method: {
-        type: 'card',
         card: card,
-        biling_details: {
+        billing_details: {
           name: $.trim(form.full_name.value),
           phone: $.trim(form.phone_number.value),
           email: $.trim(form.email.value),
@@ -101,14 +100,14 @@ form.addEventListener("submit", function (ev) {
       if (result.error) {
         var errorDiv = document.getElementById("card-errors");
         var html = `
-                  <span class="icon" role="alert">
-                  <i class="fas fa-times"></i>
-                  </span>
-                  <span>${result.error.message}</span>`;
+                <span class="icon" role="alert">
+                <i class="fas fa-times"></i>
+                </span>
+                <span>${result.error.message}</span>
+                `;
         $(errorDiv).html(html);
         $("#payment-form").fadeToggle(100);
         $("#loading-overlay").fadeToggle(100);
-
         card.update({ disabled: false });
         $("#submit-button").attr("disabled", false);
       } else {
