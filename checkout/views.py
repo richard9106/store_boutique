@@ -21,8 +21,9 @@ def cache_checkout_data(request):
         stripe.PaymentIntent.modify(pid, metadata={
             'bag': json.dumps(request.session.get('bag', {})),
             'save_info': request.POST.get('save_info'),
-            'name': request.user,
+            'username': request.user,
         })
+        
         return HttpResponse(status=200)
     except Exception as e:
         messages.error(request, "Sorry, your payment can't no be \
@@ -50,7 +51,6 @@ def checkout(request):
         }
         order_form = OrderForm(form_data)
         if order_form.is_valid():
-            print('form is valid')
             order = order_form.save()
             for item_id, item_data in bag.items():
                 try:
@@ -79,7 +79,7 @@ def checkout(request):
                     order.delete()
                     return redirect(reverse('view_bag'))
 
-            request.session['save_info'] = 'save-info' in request.POST
+            request.session['save_info'] = 'save_info' in request.POST
             return redirect(reverse('checkout_success',
                                     args=[order.order_number]))
         else:
