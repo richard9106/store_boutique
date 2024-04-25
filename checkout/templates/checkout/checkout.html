@@ -113,7 +113,8 @@
                         </div>
                         <div class="mb-3 text-danger" id="card-error" role="alert">
                         <!--error message-->
-
+                        <!--Pass the client secret to the view so we can get payment intent id-->
+                            <input type="hidden" value="{{client_secret }}" name="client_secret">
 
                         </div>
                     </fieldset>
