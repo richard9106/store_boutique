@@ -52,6 +52,7 @@ INSTALLED_APPS = [
     'products',
     'bag',
     'checkout',
+    'profiles',
 ]
 
 """We need to add a SITE_ID of 1 so that Django
