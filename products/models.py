@@ -1,6 +1,7 @@
 from django.db import models
 
 
+
 # Create your models here.
 class Category(models.Model):
     """Info of the diferent categories for our products"""
